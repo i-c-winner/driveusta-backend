@@ -1,5 +1,4 @@
 .venv
 .github
 .idea
-alembic/versions/
 .env
