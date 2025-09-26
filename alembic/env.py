@@ -33,6 +33,7 @@ if not DATABASE_URL or DATABASE_URL.startswith("driver://"):
     )
 
 # Функция для онлайн-миграций
+print(DATABASE_URL, "DATABASE_URL")
 def run_migrations_online():
     connectable = engine_from_config(
         config.get_section(config.config_ini_section),  # читаем секцию из alembic.ini
