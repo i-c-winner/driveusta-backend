@@ -1,0 +1,40 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from dotenv import load_dotenv
+load_dotenv()
+
+from alembic import context
+from sqlalchemy import engine_from_config, pool
+from logging.config import fileConfig
+
+from app.db.base import Base
+# Импортируем все модели для обнаружения Alembic
+from app.models import *  # Импорт всех моделей из пакета
+
+config = context.config
+fileConfig(config.config_file_name)
+
+target_metadata = Base.metadata
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL is None:
+    raise ValueError("DATABASE_URL not set")
+
+def run_migrations_online():
+    connectable = engine_from_config(
+        {},
+        url=DATABASE_URL,
+        poolclass=pool.NullPool
+    )
+
+    with connectable.connect() as connection:
+        context.configure(connection=connection, target_metadata=target_metadata)
+        with context.begin_transaction():
+            context.run_migrations()
+
+if context.is_offline_mode():
+    context.configure(url=DATABASE_URL, target_metadata=target_metadata, literal_binds=True)
+else:
+    run_migrations_online()
