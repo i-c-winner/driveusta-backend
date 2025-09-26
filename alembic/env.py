@@ -27,9 +27,10 @@ target_metadata = Base.metadata
 DATABASE_URL = os.getenv("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
 print(DATABASE_URL, 'Dtabase URL')
 if not DATABASE_URL or DATABASE_URL.startswith("driver://"):
-    raise ValueError(
-        "No valid database URL. Set DATABASE_URL env or configure sqlalchemy.url in alembic.ini"
-    )
+    # raise ValueError(
+    #     "No valid database URL. Set DATABASE_URL env or configure sqlalchemy.url in alembic.ini"
+    # )
+    print(DATABASE_URL, 'Dtabase URL ERROR')
 
 # Функция для онлайн-миграций
 def run_migrations_online():
