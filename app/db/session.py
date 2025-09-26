@@ -1,12 +1,22 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
-import os
 
+# Локально загружаем .env (на Render это не мешает)
 load_dotenv()
-db_url = os.getenv("DATABASE_URL")
-if db_url is None:
+
+# Берём DATABASE_URL из окружения
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL is None:
     raise ValueError("DATABASE_URL not set")
 
-engine = create_engine(db_url)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Создаём движок SQLAlchemy
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+
+# Создаём фабрику сессий
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
