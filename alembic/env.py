@@ -25,19 +25,20 @@ target_metadata = Base.metadata
 
 # Берём DATABASE_URL из окружения, иначе из alembic.ini -> sqlalchemy.url
 DATABASE_URL = os.getenv("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
-print(DATABASE_URL, 'Dtabase URL')
+
 if not DATABASE_URL or DATABASE_URL.startswith("driver://"):
-    # raise ValueError(
-    #     "No valid database URL. Set DATABASE_URL env or configure sqlalchemy.url in alembic.ini"
-    # )
-    print(DATABASE_URL, 'Dtabase URL ERROR')
+    raise ValueError(
+        f"❌ No valid database URL. Got: {DATABASE_URL!r}. "
+        "Set DATABASE_URL env or configure sqlalchemy.url in alembic.ini"
+    )
 
 # Функция для онлайн-миграций
 def run_migrations_online():
     connectable = engine_from_config(
-        {},
-        url=DATABASE_URL,
-        poolclass=pool.NullPool
+        config.get_section(config.config_ini_section),  # читаем секцию из alembic.ini
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+        url=DATABASE_URL,  # подменяем URL
     )
 
     with connectable.connect() as connection:
@@ -47,7 +48,11 @@ def run_migrations_online():
 
 # Поддержка offline/online режимов
 def run_migrations_offline():
-    context.configure(url=DATABASE_URL, target_metadata=target_metadata, literal_binds=True)
+    context.configure(
+        url=DATABASE_URL,
+        target_metadata=target_metadata,
+        literal_binds=True
+    )
     with context.begin_transaction():
         context.run_migrations()
 
