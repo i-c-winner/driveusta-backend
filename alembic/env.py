@@ -26,6 +26,9 @@ target_metadata = Base.metadata
 # Берём DATABASE_URL из окружения, иначе из alembic.ini -> sqlalchemy.url
 DATABASE_URL = os.getenv("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
 
+if DATABASE_URL and DATABASE_URL.startswith("DATABASE_URL="):
+    DATABASE_URL = DATABASE_URL.split("=", 1)[1].strip()
+
 if not DATABASE_URL or DATABASE_URL.startswith("driver://"):
     raise ValueError(
         f"❌ No valid database URL. Got: {DATABASE_URL!r}. "
