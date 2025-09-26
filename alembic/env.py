@@ -1,30 +1,34 @@
 import os
 import sys
+from logging.config import fileConfig
 
+from sqlalchemy import engine_from_config, pool
+from alembic import context
+
+# Добавляем родительскую директорию в путь для импорта
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+# Локально загружаем .env (на Render это не мешает)
 from dotenv import load_dotenv
 load_dotenv()
 
-from alembic import context
-from sqlalchemy import engine_from_config, pool
-from logging.config import fileConfig
-
+# Импорт базы и моделей
 from app.db.base import Base
-import app.models
+import app.models  # чтобы Alembic видел все модели
 
-print(Base.metadata.tables)
-
+# Настройка Alembic
 config = context.config
 fileConfig(config.config_file_name)
 
+# Метаданные для автогенерации миграций
 target_metadata = Base.metadata
-print (target_metadata.tables, 'target_metadata')
+
+# Берём DATABASE_URL из окружения
 DATABASE_URL = os.getenv("DATABASE_URL")
-print(DATABASE_URL, 'DATABASE_URL')
 if DATABASE_URL is None:
     raise ValueError("DATABASE_URL not set")
 
+# Функция для онлайн-миграций
 def run_migrations_online():
     connectable = engine_from_config(
         {},
@@ -37,6 +41,7 @@ def run_migrations_online():
         with context.begin_transaction():
             context.run_migrations()
 
+# Основной запуск
 if context.is_offline_mode():
     context.configure(url=DATABASE_URL, target_metadata=target_metadata, literal_binds=True)
 else:
