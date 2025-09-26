@@ -2,3 +2,4 @@
 .github
 .idea
 alembic/versions/
+.env
