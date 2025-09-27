@@ -2,4 +2,5 @@
 .github
 .idea
 alembic/versions/
+!alembic/versions/.gitkeeper
 .env
