@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from . import cars, participants, addresses, available_cars, photos, streets, type_work_children, type_work_parents
+from . import cars, participants, addresses, available_cars, photos, streets, type_work_children, type_work_parents, sto
 
 router = APIRouter()
 router.include_router(cars.router, prefix="/v1")
@@ -10,3 +10,4 @@ router.include_router(photos.router, prefix="/v1")
 router.include_router(streets.router, prefix="/v1")
 router.include_router(type_work_children.router, prefix="/v1")
 router.include_router(type_work_parents.router, prefix="/v1")
+router.include_router(sto.router, prefix="/v1")
