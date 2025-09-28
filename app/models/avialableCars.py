@@ -7,7 +7,7 @@ class AvialableCars(Base):
     id = Column(Integer, primary_key=True, index=True)
     car_name = Column(String, nullable=True)
     sto_id = Column(Integer, ForeignKey("sto.id"))
-    cars_id = Column(Integer, ForeignKey("cars.id"))
+    cars_id = Column(Integer, ForeignKey("cars.id"))  # Добавляем внешний ключ
 
-    sto=relationship('Sto', backref='sto')
-    cars=relationship('Cars', backref='cars')
+    sto = relationship('Sto', backref='sto')
+    cars = relationship('Cars', backref='avialable_cars')

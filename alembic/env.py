@@ -32,7 +32,7 @@ if DATABASE_URL and DATABASE_URL.startswith("DATABASE_URL="):
 if not DATABASE_URL or DATABASE_URL.startswith("driver://"):
     raise ValueError(
         f"❌ No valid database URL. Got: {DATABASE_URL!r}. "
-        "Set DATABASE_URL env or configure sqlalchemy.url in alembic.ini"
+        "Set DATABASE_URL env or configure sqlalchemy.url in alembic.ini for PostgreSQL connection"
     )
 
 # Функция для онлайн-миграций

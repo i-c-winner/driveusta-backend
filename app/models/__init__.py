@@ -7,4 +7,3 @@ from .photos import Photos
 from .streets import Streets
 from .addreses import Addresses
 from .participants import Participants
-from .avialableCars import AvialableCars
