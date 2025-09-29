@@ -14,3 +14,7 @@ class StoRepository:
     def get_sto_by_id(self, sto_id: int) -> Sto:
         """Получить СТО по ID"""
         return self.db.query(Sto).filter(Sto.id == sto_id).first()
+
+    def get_sto_by_address(self, street_name: str, address: str) -> List[Sto]:
+        """Получить СТО по названию улицы и адресу"""
+        return self.db.query(Sto).filter(Sto.street_name == street_name, Sto.address == address).all()

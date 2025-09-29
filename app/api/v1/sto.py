@@ -11,6 +11,23 @@ router = APIRouter(
     tags=["sto"]
 )
 
+@router.get("/by-address/", response_model=StosListResponse)
+async def get_stos_by_address(street_name: str, address: str, db: Session = Depends(get_db)):
+    """
+    Получить СТО по названию улицы и адресу
+    """
+    try:
+        sto_repo = StoRepository(db)
+        stos = sto_repo.get_sto_by_address(street_name, address)
+        
+        # Преобразуем модели SQLAlchemy в схемы Pydantic
+        sto_responses = [StoResponse.model_validate(sto) for sto in stos]
+        
+        return StosListResponse(stos=sto_responses)
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
+
 @router.get("/", response_model=StosListResponse)
 async def get_stos(db: Session = Depends(get_db)):
     """

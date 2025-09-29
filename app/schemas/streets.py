@@ -17,5 +17,6 @@ class StreetResponse(StreetBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+
 class StreetsListResponse(BaseModel):
     streets: List[StreetResponse]
