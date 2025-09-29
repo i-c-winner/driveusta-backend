@@ -1,22 +1,23 @@
 from pydantic import BaseModel, ConfigDict
-from typing import List
+from typing import List, Optional
 
 
 class CarBase(BaseModel):
-    brand: str
+    car_name: Optional[str] = None
+    brand: Optional[str] = None
+    model: Optional[str] = None
+    year: Optional[int] = None
 
 
 class CarCreate(CarBase):
     pass
 
 
-class CarResponse(BaseModel):
+class CarResponse(CarBase):
     id: int
-    car_name: str
     
     model_config = ConfigDict(from_attributes=True)
 
 
 class CarsListResponse(BaseModel):
     cars: List[CarResponse]
-

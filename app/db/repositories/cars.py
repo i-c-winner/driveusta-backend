@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.cars import Cars
+from app.schemas.cars import CarCreate
 from typing import List
 
 
@@ -18,3 +19,16 @@ class CarsRepository:
     def get_car_by_id(self, car_id: int) -> Cars:
         """Получить машину по ID"""
         return self.db.query(Cars).filter(Cars.id == car_id).first()
+    
+    def create_car(self, car: CarCreate) -> Cars:
+        """Создать новую машину"""
+        db_car = Cars(
+            car_name=car.car_name,
+            brand=car.brand,
+            model=car.model,
+            year=car.year
+        )
+        self.db.add(db_car)
+        self.db.commit()
+        self.db.refresh(db_car)
+        return db_car
