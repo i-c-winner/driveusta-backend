@@ -4,12 +4,27 @@ from typing import List
 
 from app.db.dependencies import get_db
 from app.db.repositories.participants import ParticipantsRepository
-from app.schemas.participants import ParticipantResponse, ParticipantsListResponse
+from app.schemas.participants import ParticipantResponse, ParticipantsListResponse, ParticipantCreate
 
 router = APIRouter(
     prefix="/participants",
     tags=["participants"]
 )
+
+@router.post("/", response_model=ParticipantResponse)
+async def create_participant(participant: ParticipantCreate, db: Session = Depends(get_db)):
+    """
+    Создать нового участника
+    """
+    try:
+        participants_repo = ParticipantsRepository(db)
+        new_participant = participants_repo.create_participant(participant)
+        
+        participant_response = ParticipantResponse.model_validate(new_participant)
+        return participant_response
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 
 @router.get("/", response_model=ParticipantsListResponse)
 async def get_participants(db: Session = Depends(get_db)):

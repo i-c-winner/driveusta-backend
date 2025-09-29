@@ -4,12 +4,27 @@ from typing import List
 
 from app.db.dependencies import get_db
 from app.db.repositories.available_cars import AvailableCarsRepository
-from app.schemas.available_cars import AvailableCarResponse, AvailableCarsListResponse
+from app.schemas.available_cars import AvailableCarResponse, AvailableCarsListResponse, AvailableCarCreate
 
 router = APIRouter(
     prefix="/available-cars",
     tags=["available_cars"]
 )
+
+@router.post("/", response_model=AvailableCarResponse)
+async def create_available_car(available_car: AvailableCarCreate, db: Session = Depends(get_db)):
+    """
+    Создать новый доступный автомобиль
+    """
+    try:
+        available_cars_repo = AvailableCarsRepository(db)
+        new_available_car = available_cars_repo.create_available_car(available_car)
+        
+        available_car_response = AvailableCarResponse.model_validate(new_available_car)
+        return available_car_response
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 
 @router.get("/", response_model=AvailableCarsListResponse)
 async def get_available_cars(db: Session = Depends(get_db)):

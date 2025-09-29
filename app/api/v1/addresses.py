@@ -4,12 +4,27 @@ from typing import List
 
 from app.db.dependencies import get_db
 from app.db.repositories.addresses import AddressesRepository
-from app.schemas.addresses import AddressResponse, AddressesListResponse
+from app.schemas.addresses import AddressResponse, AddressesListResponse, AddressCreate
 
 router = APIRouter(
     prefix="/addresses",
     tags=["addresses"]
 )
+
+@router.post("/", response_model=AddressResponse)
+async def create_address(address: AddressCreate, db: Session = Depends(get_db)):
+    """
+    Создать новый адрес
+    """
+    try:
+        addresses_repo = AddressesRepository(db)
+        new_address = addresses_repo.create_address(address)
+        
+        address_response = AddressResponse.model_validate(new_address)
+        return address_response
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 
 @router.get("/", response_model=AddressesListResponse)
 async def get_addresses(db: Session = Depends(get_db)):
