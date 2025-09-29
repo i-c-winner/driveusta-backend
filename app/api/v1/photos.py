@@ -4,12 +4,27 @@ from typing import List
 
 from app.db.dependencies import get_db
 from app.db.repositories.photos import PhotosRepository
-from app.schemas.photos import PhotoResponse, PhotosListResponse
+from app.schemas.photos import PhotoResponse, PhotosListResponse, PhotoCreate
 
 router = APIRouter(
     prefix="/photos",
     tags=["photos"]
 )
+
+@router.post("/", response_model=PhotoResponse)
+async def create_photo(photo: PhotoCreate, db: Session = Depends(get_db)):
+    """
+    Создать новую фотографию
+    """
+    try:
+        photos_repo = PhotosRepository(db)
+        new_photo = photos_repo.create_photo(photo)
+        
+        photo_response = PhotoResponse.model_validate(new_photo)
+        return photo_response
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 
 @router.get("/", response_model=PhotosListResponse)
 async def get_photos(db: Session = Depends(get_db)):
