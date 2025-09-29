@@ -4,12 +4,27 @@ from typing import List
 
 from app.db.dependencies import get_db
 from app.db.repositories.type_work_parents import TypeWorkParentsRepository
-from app.schemas.type_work_parents import TypeWorkParentResponse, TypeWorkParentsListResponse
+from app.schemas.type_work_parents import TypeWorkParentResponse, TypeWorkParentsListResponse, TypeWorkParentCreate
 
 router = APIRouter(
     prefix="/type-work-parents",
     tags=["type_work_parents"]
 )
+
+@router.post("/", response_model=TypeWorkParentResponse)
+async def create_type_work_parent(type_work_parent: TypeWorkParentCreate, db: Session = Depends(get_db)):
+    """
+    Создать новый тип работы родителя
+    """
+    try:
+        type_work_parents_repo = TypeWorkParentsRepository(db)
+        new_type_work_parent = type_work_parents_repo.create_type_work_parent(type_work_parent)
+        
+        type_work_parent_response = TypeWorkParentResponse.model_validate(new_type_work_parent)
+        return type_work_parent_response
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 
 @router.get("/", response_model=TypeWorkParentsListResponse)
 async def get_type_work_parents(db: Session = Depends(get_db)):
