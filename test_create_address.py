@@ -19,7 +19,7 @@ class TestCreateAddressEndpoint(unittest.TestCase):
         mock_address = Addresses(
             id=1,
             number="123",
-            id_sto=1
+            id_work_shop=1
         )
         
         # Настраиваем мок репозитория
@@ -30,7 +30,7 @@ class TestCreateAddressEndpoint(unittest.TestCase):
             # Подготавливаем данные для запроса
             address_data = {
                 "number": "123",
-                "id_sto": 1
+                "id_work_shop": 1
             }
             
             # Выполняем POST запрос
@@ -41,7 +41,7 @@ class TestCreateAddressEndpoint(unittest.TestCase):
             data = response.json()
             self.assertEqual(data["id"], 1)
             self.assertEqual(data["number"], "123")
-            self.assertEqual(data["id_sto"], 1)
+            self.assertEqual(data["id_work_shop"], 1)
 
 if __name__ == "__main__":
     unittest.main()

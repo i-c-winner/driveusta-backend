@@ -19,7 +19,7 @@ class TestCreatePhotoEndpoint(unittest.TestCase):
         mock_photo = Photos(
             id=1,
             url="http://example.com/photo.jpg",
-            id_sto=1
+            id_work_shop=1
         )
         
         # Настраиваем мок репозитория
@@ -30,7 +30,7 @@ class TestCreatePhotoEndpoint(unittest.TestCase):
             # Подготавливаем данные для запроса
             photo_data = {
                 "url": "http://example.com/photo.jpg",
-                "id_sto": 1
+                "id_work_shop": 1
             }
             
             # Выполняем POST запрос
@@ -41,7 +41,7 @@ class TestCreatePhotoEndpoint(unittest.TestCase):
             data = response.json()
             self.assertEqual(data["id"], 1)
             self.assertEqual(data["url"], "http://example.com/photo.jpg")
-            self.assertEqual(data["id_sto"], 1)
+            self.assertEqual(data["id_work_shop"], 1)
 
 if __name__ == "__main__":
     unittest.main()

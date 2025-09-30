@@ -4,7 +4,7 @@ from typing import List, Optional
 
 class StreetBase(BaseModel):
     street_name: Optional[str] = None
-    id_sto: Optional[int] = None
+    id_work_shop: Optional[int] = None
 
 
 class StreetCreate(StreetBase):

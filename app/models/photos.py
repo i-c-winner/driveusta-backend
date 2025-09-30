@@ -6,6 +6,6 @@ class Photos(Base):
     __tablename__ = "photos"
     id = Column(Integer, primary_key=True, index=True)
     url= Column(String, nullable=True)
-    id_sto = Column(Integer, ForeignKey("sto.id"))
+    id_work_shop = Column(Integer, ForeignKey("work_shop.id"))
 
-    sto=relationship('Sto', backref='photos')
+    work_shop=relationship('work_shop', backref='photos')

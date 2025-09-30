@@ -4,7 +4,7 @@ from typing import List, Optional
 
 class PhotoBase(BaseModel):
     url: Optional[str] = None
-    id_sto: Optional[int] = None
+    id_work_shop: Optional[int] = None
 
 
 class PhotoCreate(PhotoBase):

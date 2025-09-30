@@ -4,7 +4,7 @@ from typing import List, Optional
 
 class AvailableCarBase(BaseModel):
     car_name: Optional[str] = None
-    sto_id: Optional[int] = None
+    work_shop_id: Optional[int] = None
     cars_id: Optional[int] = None
 
 

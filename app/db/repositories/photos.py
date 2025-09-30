@@ -20,7 +20,7 @@ class PhotosRepository:
         """Создать новую фотографию"""
         db_photo = Photos(
             url=photo.url,
-            id_sto=photo.id_sto
+            id_work_shop=photo.id_work_shop
         )
         self.db.add(db_photo)
         self.db.commit()

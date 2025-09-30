@@ -19,7 +19,7 @@ class TestCreateAvailableCarEndpoint(unittest.TestCase):
         mock_available_car = AvialableCars(
             id=1,
             car_name="Toyota Camry",
-            sto_id=1,
+            work_shop_id=1,
             cars_id=1
         )
         
@@ -31,7 +31,7 @@ class TestCreateAvailableCarEndpoint(unittest.TestCase):
             # Подготавливаем данные для запроса
             available_car_data = {
                 "car_name": "Toyota Camry",
-                "sto_id": 1,
+                "work_shop_id": 1,
                 "cars_id": 1
             }
             
@@ -43,7 +43,7 @@ class TestCreateAvailableCarEndpoint(unittest.TestCase):
             data = response.json()
             self.assertEqual(data["id"], 1)
             self.assertEqual(data["car_name"], "Toyota Camry")
-            self.assertEqual(data["sto_id"], 1)
+            self.assertEqual(data["work_shop_id"], 1)
             self.assertEqual(data["cars_id"], 1)
 
 if __name__ == "__main__":

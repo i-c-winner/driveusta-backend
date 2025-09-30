@@ -1,4 +1,4 @@
-from .sto import Sto
+from .work_shop import work_shop
 from .typeWorkParents import TypeWorkParents
 from .typeWorkChildren import TypeWorkChildren
 from .cars import Cars
@@ -7,3 +7,4 @@ from .photos import Photos
 from .streets import Streets
 from .addreses import Addresses
 from .participants import Participants
+from .calendar.working_hours import WorkingHours

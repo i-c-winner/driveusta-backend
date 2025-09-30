@@ -20,7 +20,7 @@ class AvailableCarsRepository:
         """Создать новый доступный автомобиль"""
         db_available_car = AvialableCars(
             car_name=available_car.car_name,
-            sto_id=available_car.sto_id,
+            work_shop_id=available_car.work_shop_id,
             cars_id=available_car.cars_id
         )
         self.db.add(db_available_car)

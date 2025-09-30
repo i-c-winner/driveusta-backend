@@ -19,7 +19,7 @@ class TestCreateStreetEndpoint(unittest.TestCase):
         mock_street = Streets(
             id=1,
             street_name="Main Street",
-            id_sto=1
+            id_work_shop=1
         )
         
         # Настраиваем мок репозитория
@@ -30,7 +30,7 @@ class TestCreateStreetEndpoint(unittest.TestCase):
             # Подготавливаем данные для запроса
             street_data = {
                 "street_name": "Main Street",
-                "id_sto": 1
+                "id_work_shop": 1
             }
             
             # Выполняем POST запрос
@@ -41,7 +41,7 @@ class TestCreateStreetEndpoint(unittest.TestCase):
             data = response.json()
             self.assertEqual(data["id"], 1)
             self.assertEqual(data["street_name"], "Main Street")
-            self.assertEqual(data["id_sto"], 1)
+            self.assertEqual(data["id_work_shop"], 1)
 
 if __name__ == "__main__":
     unittest.main()

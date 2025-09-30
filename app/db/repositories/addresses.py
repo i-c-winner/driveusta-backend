@@ -20,7 +20,7 @@ class AddressesRepository:
         """Создать новый адрес"""
         db_address = Addresses(
             number=address.number,
-            id_sto=address.id_sto
+            id_work_shop=address.id_work_shop
         )
         self.db.add(db_address)
         self.db.commit()

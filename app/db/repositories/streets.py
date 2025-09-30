@@ -20,7 +20,7 @@ class StreetsRepository:
         """Создать новую улицу"""
         db_street = Streets(
             street_name=street.street_name,
-            id_sto=street.id_sto
+            id_work_shop=street.id_work_shop
         )
         self.db.add(db_street)
         self.db.commit()
