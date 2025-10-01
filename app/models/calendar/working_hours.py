@@ -17,4 +17,4 @@ class WorkingHours(Base):
     opening_time=Column(Time, default=time(8, 0),nullable= True)
     closening_time=Column(String, default=time(20, 0), nullable=True)
 
-    work_shop=relationship('work_shop', backref='working_hours')
+    work_shop=relationship('WorkShop', backref='working_hours')

@@ -1,4 +1,4 @@
-from .work_shops import work_shop
+from .work_shops import WorkShop
 from .type_work_parents import TypeWorkParents
 from .type_work_children import TypeWorkChildren
 from .cars import Cars

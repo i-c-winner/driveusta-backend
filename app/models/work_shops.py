@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Numeric, Float
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 
-class work_shop(Base):
+class WorkShop(Base):
     __tablename__ = "work_shop"
     __table_args__ = {"schema": "work_shop"}
 

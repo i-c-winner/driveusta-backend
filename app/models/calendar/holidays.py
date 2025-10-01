@@ -10,4 +10,4 @@ class Holidays(Base):
     id=Column(Integer, primary_key=True, index=True)
     description=Column(String(200), nullable=False)
 
-    work_shop=relationship('work_shop', secondary="work_shop.holidays_work_shops", back_populates="holidays")
+    work_shop=relationship('WorkShop', secondary="work_shop.holidays_work_shops", back_populates="holidays")

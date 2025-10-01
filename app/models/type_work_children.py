@@ -12,3 +12,4 @@ class TypeWorkChildren(Base):
     parent_id = Column(Integer, ForeignKey("cars.type_work_parents.id"))
 
     parent=relationship('TypeWorkParents', backref='children')
+    appointments = relationship('Appointments', secondary='participants.appointments_work_type_children', back_populates='work_type')

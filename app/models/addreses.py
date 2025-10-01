@@ -10,4 +10,4 @@ class Addresses(Base):
     number = Column(String, nullable=True)
     id_work_shop = Column(Integer, ForeignKey("work_shop.work_shop.id"))
 
-    work_shop= relationship('work_shop', backref='addresses')
+    work_shop= relationship('WorkShop', backref='addresses')

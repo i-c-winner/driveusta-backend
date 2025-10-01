@@ -18,5 +18,5 @@ class Appointments(Base):
     description=Column(String(200), nullable=False)
 
     work_type=relationship('TypeWorkChildren',secondary="participants.appointments_work_type_children",  back_populates='appointments')
-    work_shop=relationship('work_shop', secondary="participants.appointments_work_shop", backref="appointments")
+    work_shop=relationship('WorkShop', secondary="participants.appointments_work_shop", backref="appointments")
     cars=relationship('Cars', secondary="participants.appointments_cars", backref="appointments")

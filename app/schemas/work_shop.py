@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 
 
-class work_shopBase(BaseModel):
+class WorkShopBase(BaseModel):
     work_shop_name: Optional[str] = None
     telephone: Optional[str] = None
     street_name: Optional[str] = None
@@ -11,15 +11,15 @@ class work_shopBase(BaseModel):
     rating: Optional[float] = None
 
 
-class work_shopCreate(work_shopBase):
+class WorkShopCreate(WorkShopBase):
     pass
 
 
-class work_shopResponse(work_shopBase):
+class WorkShopResponse(WorkShopBase):
     id: int
     
     model_config = ConfigDict(from_attributes=True)
 
 
-class work_shopsListResponse(BaseModel):
-    work_shops: List[work_shopResponse]
+class WorkShopsListResponse(BaseModel):
+    work_shops: List[WorkShopResponse]

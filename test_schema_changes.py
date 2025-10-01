@@ -3,7 +3,7 @@
 """
 from sqlalchemy import create_engine, MetaData
 from app.db.base import Base
-from app.models.work_shops import work_shop
+from app.models.work_shops import WorkShop
 from app.models.calendar.appointments import Appointments
 from app.models.calendar.holidays import Holidays
 from app.models.calendar.working_hours import WorkingHours
@@ -22,7 +22,7 @@ def test_schema():
     
     # Проверяем, что все модели имеют правильную схему
     work_shop_models = [
-        ("work_shop", work_shop),
+        ("work_shop", WorkShop),
         ("holidays", Holidays),
         ("working_hours", WorkingHours),
         ("avialable_cars", AvialableCars),
