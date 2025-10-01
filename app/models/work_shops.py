@@ -3,6 +3,7 @@ from app.db.base import Base
 
 class work_shop(Base):
     __tablename__ = "work_shop"
+    __table_args__ = {"schema": "work_shop"}
 
     id = Column(Integer, primary_key=True, index=True)
     work_shop_name = Column(String, nullable=True)

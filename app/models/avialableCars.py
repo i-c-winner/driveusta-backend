@@ -4,9 +4,11 @@ from sqlalchemy.orm import relationship
 
 class AvialableCars(Base):
     __tablename__ = "avialable_cars"
+    __table_args__ = {"schema": "work_shop"}
+    
     id = Column(Integer, primary_key=True, index=True)
     car_name = Column(String, nullable=True)
-    work_shop_id = Column(Integer, ForeignKey("work_shop.id"))
+    work_shop_id = Column(Integer, ForeignKey("work_shop.work_shop.id"))
     cars_id = Column(Integer, ForeignKey("cars.id"))  # Добавляем внешний ключ
 
     work_shop = relationship('work_shop', backref='work_shop')

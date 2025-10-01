@@ -3,12 +3,11 @@ from sqlalchemy.orm import relationship
 
 from app.db.base import Base
 
-class Holiday(Base):
+class Holidays(Base):
     __tablename__ = "holidays"
+    __table_args__ = {"schema": "work_shop"}
 
     id=Column(Integer, primary_key=True, index=True)
-    work_shop_id=Column(Integer, ForeignKey("work_shop.id"))
-    holiday_date=Column(Date, nullable=True)
     description=Column(String(200), nullable=False)
 
-    work_shop=relationship('work_shop', backref='holidays')
+    work_shop=relationship('work_shop', secondary="work_shop.holidays_work_shops", back_populates="holiday")

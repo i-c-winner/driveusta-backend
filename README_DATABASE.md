@@ -21,6 +21,22 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/driveusta
    GRANT ALL PRIVILEGES ON DATABASE driveusta TO driveusta_user;
    ```
 
+## Схема базы данных
+
+В проекте используется две схемы базы данных:
+- `public` - основная схема для общих таблиц
+- `work_shop` - схема для таблиц, связанных с мастерскими
+
+Таблицы в схеме `work_shop`:
+- appointments
+- holidays
+- working_hours
+- avialable_cars
+- photos
+- type_work_children
+- type_work_parents
+- work_shop
+
 ## Применение миграций
 
 ```bash

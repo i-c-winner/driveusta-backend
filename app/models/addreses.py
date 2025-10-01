@@ -8,6 +8,6 @@ class Addresses(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     number = Column(String, nullable=True)
-    id_work_shop = Column(Integer, ForeignKey("work_shop.id"))
+    id_work_shop = Column(Integer, ForeignKey("work_shop.work_shop.id"))
 
     work_shop= relationship('work_shop', backref='addresses')

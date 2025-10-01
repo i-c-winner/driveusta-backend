@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.typeWorkChildren import TypeWorkChildren
+from app.models.type_work_children import TypeWorkChildren
 from app.schemas.type_work_children import TypeWorkChildCreate
 from typing import List
 

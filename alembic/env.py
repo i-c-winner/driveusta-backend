@@ -15,6 +15,7 @@ load_dotenv()
 # Импорт базы и моделей
 from app.db.base import Base
 import app.models  # чтобы Alembic видел все модели
+import app.models.calendar  # чтобы Alembic видел все модели календаря
 
 # Настройка Alembic
 config = context.config

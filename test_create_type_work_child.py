@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
 from app.main import app
 from app.db.repositories.type_work_children import TypeWorkChildrenRepository
-from app.models.typeWorkChildren import TypeWorkChildren
+from app.models.type_work_children import TypeWorkChildren
 
 client = TestClient(app)
 

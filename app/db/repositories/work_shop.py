@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.work_shop import work_shop
+from app.models.work_shops import work_shop
 from typing import List
 
 

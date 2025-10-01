@@ -1,6 +1,6 @@
-from .work_shop import work_shop
-from .typeWorkParents import TypeWorkParents
-from .typeWorkChildren import TypeWorkChildren
+from .work_shops import work_shop
+from .type_work_parents import TypeWorkParents
+from .type_work_children import TypeWorkChildren
 from .cars import Cars
 from .avialableCars import AvialableCars
 from .photos import Photos
@@ -8,3 +8,5 @@ from .streets import Streets
 from .addreses import Addresses
 from .participants import Participants
 from .calendar.working_hours import WorkingHours
+from .calendar.appointments import Appointments
+from .calendar.holidays import Holidays
