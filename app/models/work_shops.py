@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Numeric, Float
+from sqlalchemy.orm import relationship
 from app.db.base import Base
 
 class work_shop(Base):
@@ -12,3 +13,5 @@ class work_shop(Base):
     address = Column(String, nullable=True)
     site = Column(String, nullable=True)
     rating = Column(Float, nullable=True)
+    
+    holidays = relationship('Holidays', secondary='work_shop.holidays_work_shops', back_populates='work_shop')

@@ -9,7 +9,7 @@ class AvialableCars(Base):
     id = Column(Integer, primary_key=True, index=True)
     car_name = Column(String, nullable=True)
     work_shop_id = Column(Integer, ForeignKey("work_shop.work_shop.id"))
-    cars_id = Column(Integer, ForeignKey("cars.id"))  # Добавляем внешний ключ
+    cars_id = Column(Integer, ForeignKey("cars.cars.id"))  # Fixed: Added full schema reference
 
     work_shop = relationship('work_shop', backref='work_shop')
     cars = relationship('Cars', backref='avialable_cars')
