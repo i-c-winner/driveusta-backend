@@ -42,21 +42,40 @@ if not DATABASE_URL or DATABASE_URL.startswith("driver://"):
 # Функция для создания схем в PostgreSQL
 def create_schemas_if_not_exist(connection):
     """Создать схемы, если они еще не существуют"""
-    # Получаем список уникальных схем из всех таблиц
-    schemas = set()
-    for table in target_metadata.tables.values():
-        if hasattr(table, '__table_args__') and table.__table_args__:
-            if isinstance(table.__table_args__, dict) and 'schema' in table.__table_args__:
-                schemas.add(table.__table_args__['schema'])
-            elif isinstance(table.__table_args__, tuple):
-                for arg in table.__table_args__:
-                    if isinstance(arg, dict) and 'schema' in arg:
-                        schemas.add(arg['schema'])
-    
-    # Создаем каждую схему, если она еще не существует
-    for schema in schemas:
-        if schema != 'public':  # public схема создается по умолчанию
-            connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema}"))
+    try:
+        # Получаем список уникальных схем из всех таблиц
+        schemas = set()
+        for table in target_metadata.tables.values():
+            # Проверяем атрибут __table_args__ у каждой таблицы
+            if hasattr(table, '__table_args__'):
+                table_args = table.__table_args__
+                if table_args:
+                    # Если __table_args__ - словарь
+                    if isinstance(table_args, dict):
+                        if 'schema' in table_args:
+                            schema_name = table_args['schema']
+                            if schema_name:
+                                schemas.add(schema_name)
+                    # Если __table_args__ - кортеж
+                    elif isinstance(table_args, tuple):
+                        for arg in table_args:
+                            if isinstance(arg, dict) and 'schema' in arg:
+                                schema_name = arg['schema']
+                                if schema_name:
+                                    schemas.add(schema_name)
+        
+        # Выводим информацию о найденных схемах
+        print(f"Найдено схем для создания: {len(schemas)}")
+        for schema in sorted(schemas):
+            print(f"  - {schema}")
+        
+        # Создаем каждую схему, если она еще не существует
+        for schema in schemas:
+            if schema and schema != 'public':  # public схема создается по умолчанию
+                connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema}"))
+                print(f"Создана схема: {schema}")
+    except Exception as e:
+        print(f"Ошибка при создании схем: {e}")
 
 # Функция для онлайн-миграций
 def run_migrations_online():
