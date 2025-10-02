@@ -15,6 +15,6 @@ class WorkingHours(Base):
     day_of_week=Column(Integer, nullable=True)
     is_working=Column(Boolean, nullable=True)
     opening_time=Column(Time, default=time(8, 0),nullable= True)
-    closening_time=Column(String, default=time(20, 0), nullable=True)
+    closing_time=Column(Time, default=time(20, 0), nullable=True)
 
     work_shop=relationship('WorkShop', backref='working_hours')

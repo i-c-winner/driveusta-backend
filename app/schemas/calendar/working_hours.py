@@ -8,7 +8,7 @@ class WorkingHourBase(BaseModel):
     day_of_week: Optional[int] = None
     is_working: Optional[bool] = None
     opening_time: Optional[time_type] = None
-    closening_time: Optional[str] = None
+    closing_time: Optional[time_type] = None
 
 
 class WorkingHourCreate(WorkingHourBase):
@@ -20,7 +20,7 @@ class WorkingHourUpdate(BaseModel):
     day_of_week: Optional[int] = None
     is_working: Optional[bool] = None
     opening_time: Optional[time_type] = None
-    closening_time: Optional[str] = None
+    closing_time: Optional[time_type] = None
 
 
 class WorkingHourResponse(WorkingHourBase):

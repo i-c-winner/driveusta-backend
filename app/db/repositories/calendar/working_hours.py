@@ -26,7 +26,7 @@ class WorkingHourRepository:
             day_of_week=working_hour.day_of_week,
             is_working=working_hour.is_working,
             opening_time=working_hour.opening_time,
-            closening_time=working_hour.closening_time
+            closing_time=working_hour.closing_time
         )
         self.db.add(db_working_hour)
         self.db.commit()
