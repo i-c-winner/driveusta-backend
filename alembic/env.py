@@ -2,7 +2,7 @@ import os
 import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import engine_from_config, pool, MetaData, text
 from alembic import context
 
 # Добавляем родительскую директорию в путь для импорта
@@ -19,7 +19,10 @@ import app.models.calendar  # чтобы Alembic видел все модели 
 
 # Настройка Alembic
 config = context.config
-fileConfig(config.config_file_name)
+
+# Проверяем, что config_file_name существует
+if config.config_file_name:
+    fileConfig(config.config_file_name)
 
 # Метаданные для автогенерации миграций
 target_metadata = Base.metadata
@@ -36,17 +39,38 @@ if not DATABASE_URL or DATABASE_URL.startswith("driver://"):
         "Set DATABASE_URL env or configure sqlalchemy.url in alembic.ini for PostgreSQL connection"
     )
 
+# Функция для создания схем в PostgreSQL
+def create_schemas_if_not_exist(connection):
+    """Создать схемы, если они еще не существуют"""
+    # Получаем список уникальных схем из всех таблиц
+    schemas = set()
+    for table in target_metadata.tables.values():
+        if hasattr(table, '__table_args__') and table.__table_args__:
+            if isinstance(table.__table_args__, dict) and 'schema' in table.__table_args__:
+                schemas.add(table.__table_args__['schema'])
+            elif isinstance(table.__table_args__, tuple):
+                for arg in table.__table_args__:
+                    if isinstance(arg, dict) and 'schema' in arg:
+                        schemas.add(arg['schema'])
+    
+    # Создаем каждую схему, если она еще не существует
+    for schema in schemas:
+        if schema != 'public':  # public схема создается по умолчанию
+            connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema}"))
+
 # Функция для онлайн-миграций
-print(DATABASE_URL, "DATABASE_URL")
 def run_migrations_online():
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section),  # читаем секцию из alembic.ini
+        config.get_section(config.config_ini_section) or {},  # читаем секцию из alembic.ini
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
         url=DATABASE_URL,  # подменяем URL
     )
 
     with connectable.connect() as connection:
+        # Создаем схемы перед выполнением миграций
+        create_schemas_if_not_exist(connection)
+        
         context.configure(connection=connection, target_metadata=target_metadata)
         with context.begin_transaction():
             context.run_migrations()
