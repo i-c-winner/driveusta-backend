@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.work_shops import WorkShop
+from app.schemas.work_shop import WorkShopCreate
 from typing import List
 
 
@@ -18,3 +19,18 @@ class WorkShopRepository:
     def get_work_shop_by_address(self, street_name: str, address: str) -> List[WorkShop]:
         """Получить СТО по названию улицы и адресу"""
         return self.db.query(WorkShop).filter(WorkShop.street_name == street_name, WorkShop.address == address).all()
+    
+    def create_work_shop(self, work_shop: WorkShopCreate) -> WorkShop:
+        """Создать новое СТО"""
+        db_work_shop = WorkShop(
+            work_shop_name=work_shop.work_shop_name,
+            telephone=work_shop.telephone,
+            street_name=work_shop.street_name,
+            address=work_shop.address,
+            site=work_shop.site,
+            rating=work_shop.rating
+        )
+        self.db.add(db_work_shop)
+        self.db.commit()
+        self.db.refresh(db_work_shop)
+        return db_work_shop

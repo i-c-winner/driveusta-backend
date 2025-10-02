@@ -56,3 +56,12 @@ source .venv/bin/activate
 # Запустите сервер
 uvicorn app.main:app --reload
 ```
+
+## API эндпоинты
+
+### Эндпоинты для работы с СТО
+
+- `POST /api/v1/work_shop/` - Создание нового СТО
+- `GET /api/v1/work_shop/` - Получение списка всех СТО
+- `GET /api/v1/work_shop/{id}` - Получение СТО по ID
+- `GET /api/v1/work_shop/by-address/?street_name={street}&address={address}` - Получение СТО по адресу
