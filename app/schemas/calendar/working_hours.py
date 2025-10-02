@@ -4,7 +4,7 @@ from datetime import time as time_type
 
 
 class WorkingHourBase(BaseModel):
-    work_shop_id: Optional[int] = None
+    work_shop_id: int
     day_of_week: Optional[int] = None
     is_working: Optional[bool] = None
     opening_time: Optional[time_type] = None
@@ -15,8 +15,12 @@ class WorkingHourCreate(WorkingHourBase):
     pass
 
 
-class WorkingHourUpdate(WorkingHourBase):
-    pass
+class WorkingHourUpdate(BaseModel):
+    work_shop_id: Optional[int] = None
+    day_of_week: Optional[int] = None
+    is_working: Optional[bool] = None
+    opening_time: Optional[time_type] = None
+    closening_time: Optional[str] = None
 
 
 class WorkingHourResponse(WorkingHourBase):

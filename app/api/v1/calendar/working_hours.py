@@ -27,13 +27,13 @@ async def create_working_hour(working_hour: WorkingHourCreate, db: Session = Dep
         raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 
 @router.get("/", response_model=WorkingHoursListResponse)
-async def get_working_hours(db: Session = Depends(get_db)):
+async def get_working_hours(work_shop_id: int, db: Session = Depends(get_db)):
     """
-    Получить список всех рабочих часов из базы данных
+    Получить список всех рабочих часов из базы данных для определенного СТО
     """
     try:
         working_hour_repo = WorkingHourRepository(db)
-        working_hours = working_hour_repo.get_all_working_hours()
+        working_hours = working_hour_repo.get_all_working_hours(work_shop_id)
         
         # Преобразуем модели SQLAlchemy в схемы Pydantic
         working_hour_responses = [WorkingHourResponse.model_validate(working_hour) for working_hour in working_hours]
@@ -44,16 +44,16 @@ async def get_working_hours(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
 @router.get("/{working_hour_id}", response_model=WorkingHourResponse)
-async def get_working_hour_by_id(working_hour_id: int, db: Session = Depends(get_db)):
+async def get_working_hour_by_id(working_hour_id: int, work_shop_id: int, db: Session = Depends(get_db)):
     """
-    Получить рабочие часы по ID
+    Получить рабочие часы по ID для определенного СТО
     """
     try:
         working_hour_repo = WorkingHourRepository(db)
-        working_hour = working_hour_repo.get_working_hour_by_id(working_hour_id)
+        working_hour = working_hour_repo.get_working_hour_by_id(working_hour_id, work_shop_id)
         
         if working_hour is None:
-            raise HTTPException(status_code=404, detail=f"Рабочие часы с ID {working_hour_id} не найдены")
+            raise HTTPException(status_code=404, detail=f"Рабочие часы с ID {working_hour_id} для СТО {work_shop_id} не найдены")
         
         working_hour_response = WorkingHourResponse.model_validate(working_hour)
         return working_hour_response
@@ -64,16 +64,16 @@ async def get_working_hour_by_id(working_hour_id: int, db: Session = Depends(get
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
 @router.put("/{working_hour_id}", response_model=WorkingHourResponse)
-async def update_working_hour(working_hour_id: int, working_hour: WorkingHourUpdate, db: Session = Depends(get_db)):
+async def update_working_hour(working_hour_id: int, work_shop_id: int, working_hour: WorkingHourUpdate, db: Session = Depends(get_db)):
     """
-    Обновить рабочие часы по ID
+    Обновить рабочие часы по ID для определенного СТО
     """
     try:
         working_hour_repo = WorkingHourRepository(db)
-        updated_working_hour = working_hour_repo.update_working_hour(working_hour_id, working_hour)
+        updated_working_hour = working_hour_repo.update_working_hour(working_hour_id, work_shop_id, working_hour)
         
         if updated_working_hour is None:
-            raise HTTPException(status_code=404, detail=f"Рабочие часы с ID {working_hour_id} не найдены")
+            raise HTTPException(status_code=404, detail=f"Рабочие часы с ID {working_hour_id} для СТО {work_shop_id} не найдены")
         
         working_hour_response = WorkingHourResponse.model_validate(updated_working_hour)
         return working_hour_response
@@ -84,18 +84,18 @@ async def update_working_hour(working_hour_id: int, working_hour: WorkingHourUpd
         raise HTTPException(status_code=500, detail=f"Ошибка при обновлении данных: {str(e)}")
 
 @router.delete("/{working_hour_id}")
-async def delete_working_hour(working_hour_id: int, db: Session = Depends(get_db)):
+async def delete_working_hour(working_hour_id: int, work_shop_id: int, db: Session = Depends(get_db)):
     """
-    Удалить рабочие часы по ID
+    Удалить рабочие часы по ID для определенного СТО
     """
     try:
         working_hour_repo = WorkingHourRepository(db)
-        result = working_hour_repo.delete_working_hour(working_hour_id)
+        result = working_hour_repo.delete_working_hour(working_hour_id, work_shop_id)
         
         if not result:
-            raise HTTPException(status_code=404, detail=f"Рабочие часы с ID {working_hour_id} не найдены")
+            raise HTTPException(status_code=404, detail=f"Рабочие часы с ID {working_hour_id} для СТО {work_shop_id} не найдены")
         
-        return {"message": f"Рабочие часы с ID {working_hour_id} успешно удалены"}
+        return {"message": f"Рабочие часы с ID {working_hour_id} для СТО {work_shop_id} успешно удалены"}
         
     except HTTPException:
         raise

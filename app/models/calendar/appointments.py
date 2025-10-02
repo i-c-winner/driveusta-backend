@@ -8,6 +8,7 @@ class Appointments(Base):
     __table_args__ = {"schema": "participants"}
 
     id=Column(Integer, primary_key=True, index=True)
+    work_shop_id=Column(Integer, ForeignKey("work_shop.work_shop.id"))
     client_name=Column(String(100), nullable=True)
     client_phone=Column(String(20), nullable=True)
     car_license_plate=Column(String(10), nullable=True)

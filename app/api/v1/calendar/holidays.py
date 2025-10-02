@@ -27,13 +27,13 @@ async def create_holiday(holiday: HolidayCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 
 @router.get("/", response_model=HolidaysListResponse)
-async def get_holidays(db: Session = Depends(get_db)):
+async def get_holidays(work_shop_id: int, db: Session = Depends(get_db)):
     """
-    Получить список всех праздников из базы данных
+    Получить список всех праздников из базы данных для определенного СТО
     """
     try:
         holiday_repo = HolidayRepository(db)
-        holidays = holiday_repo.get_all_holidays()
+        holidays = holiday_repo.get_all_holidays(work_shop_id)
         
         # Преобразуем модели SQLAlchemy в схемы Pydantic
         holiday_responses = [HolidayResponse.model_validate(holiday) for holiday in holidays]
@@ -44,16 +44,16 @@ async def get_holidays(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
 @router.get("/{holiday_id}", response_model=HolidayResponse)
-async def get_holiday_by_id(holiday_id: int, db: Session = Depends(get_db)):
+async def get_holiday_by_id(holiday_id: int, work_shop_id: int, db: Session = Depends(get_db)):
     """
-    Получить праздник по ID
+    Получить праздник по ID для определенного СТО
     """
     try:
         holiday_repo = HolidayRepository(db)
-        holiday = holiday_repo.get_holiday_by_id(holiday_id)
+        holiday = holiday_repo.get_holiday_by_id(holiday_id, work_shop_id)
         
         if holiday is None:
-            raise HTTPException(status_code=404, detail=f"Праздник с ID {holiday_id} не найден")
+            raise HTTPException(status_code=404, detail=f"Праздник с ID {holiday_id} для СТО {work_shop_id} не найден")
         
         holiday_response = HolidayResponse.model_validate(holiday)
         return holiday_response
@@ -64,16 +64,16 @@ async def get_holiday_by_id(holiday_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
 @router.put("/{holiday_id}", response_model=HolidayResponse)
-async def update_holiday(holiday_id: int, holiday: HolidayUpdate, db: Session = Depends(get_db)):
+async def update_holiday(holiday_id: int, work_shop_id: int, holiday: HolidayUpdate, db: Session = Depends(get_db)):
     """
-    Обновить праздник по ID
+    Обновить праздник по ID для определенного СТО
     """
     try:
         holiday_repo = HolidayRepository(db)
-        updated_holiday = holiday_repo.update_holiday(holiday_id, holiday)
+        updated_holiday = holiday_repo.update_holiday(holiday_id, work_shop_id, holiday)
         
         if updated_holiday is None:
-            raise HTTPException(status_code=404, detail=f"Праздник с ID {holiday_id} не найден")
+            raise HTTPException(status_code=404, detail=f"Праздник с ID {holiday_id} для СТО {work_shop_id} не найден")
         
         holiday_response = HolidayResponse.model_validate(updated_holiday)
         return holiday_response
@@ -84,18 +84,18 @@ async def update_holiday(holiday_id: int, holiday: HolidayUpdate, db: Session = 
         raise HTTPException(status_code=500, detail=f"Ошибка при обновлении данных: {str(e)}")
 
 @router.delete("/{holiday_id}")
-async def delete_holiday(holiday_id: int, db: Session = Depends(get_db)):
+async def delete_holiday(holiday_id: int, work_shop_id: int, db: Session = Depends(get_db)):
     """
-    Удалить праздник по ID
+    Удалить праздник по ID для определенного СТО
     """
     try:
         holiday_repo = HolidayRepository(db)
-        result = holiday_repo.delete_holiday(holiday_id)
+        result = holiday_repo.delete_holiday(holiday_id, work_shop_id)
         
         if not result:
-            raise HTTPException(status_code=404, detail=f"Праздник с ID {holiday_id} не найден")
+            raise HTTPException(status_code=404, detail=f"Праздник с ID {holiday_id} для СТО {work_shop_id} не найден")
         
-        return {"message": f"Праздник с ID {holiday_id} успешно удален"}
+        return {"message": f"Праздник с ID {holiday_id} для СТО {work_shop_id} успешно удален"}
         
     except HTTPException:
         raise

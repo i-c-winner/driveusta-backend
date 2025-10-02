@@ -3,6 +3,7 @@ from typing import List, Optional
 
 
 class HolidayBase(BaseModel):
+    work_shop_id: int
     description: Optional[str] = None
 
 
@@ -10,8 +11,9 @@ class HolidayCreate(HolidayBase):
     pass
 
 
-class HolidayUpdate(HolidayBase):
-    pass
+class HolidayUpdate(BaseModel):
+    work_shop_id: Optional[int] = None
+    description: Optional[str] = None
 
 
 class HolidayResponse(HolidayBase):
