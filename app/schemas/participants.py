@@ -3,11 +3,12 @@ from typing import List, Optional
 
 
 class ParticipantBase(BaseModel):
-    name: Optional[str] = None
-    password: Optional[str] = None
+    password: str = None
+    email: str = None
     login: Optional[str] = None
     vin: Optional[float] = None
     car_id: Optional[int] = None
+
 
 
 class ParticipantCreate(ParticipantBase):

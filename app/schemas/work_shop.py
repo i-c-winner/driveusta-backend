@@ -3,12 +3,12 @@ from typing import List, Optional
 
 
 class WorkShopBase(BaseModel):
-    work_shop_name: Optional[str] = None
-    telephone: Optional[str] = None
-    street_name: Optional[str] = None
-    address: Optional[str] = None
-    site: Optional[str] = None
-    rating: Optional[float] = None
+    work_shop_name: str = None
+    telephone: str = None
+    street_name: str = None
+    address: str = None
+    site: str = None
+    rating: float = None
 
 
 class WorkShopCreate(WorkShopBase):
