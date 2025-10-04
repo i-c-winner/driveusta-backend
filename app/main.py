@@ -17,7 +17,7 @@ def root():
             <body>
                 <p>Привет</p>
                 <p>Описание Api можно посмотреть на этом же host добавив '/docs'</p>
-                <p>Сам репозиторий можно найти https://github.com/i-c-winner/driveusta-backend</p>
+                <p>Сам репозиторий можно найти <a href='https://github.com/i-c-winner/driveusta-backend'>По этой ссылке</a>
             </body>
         </html>
         """
