@@ -28,7 +28,8 @@ class WorkShopRepository:
             street_name=work_shop.street_name,
             address=work_shop.address,
             site=work_shop.site,
-            rating=work_shop.rating
+            rating=work_shop.rating,
+            hash_password=work_shop.hash_password
         )
         self.db.add(db_work_shop)
         self.db.commit()

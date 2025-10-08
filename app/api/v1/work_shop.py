@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+from app.services.work_shop import get_current_work_shop
 
 from app.db.dependencies import get_db
 from app.db.repositories.work_shop import WorkShopRepository
@@ -19,10 +20,10 @@ async def create_work_shop(work_shop: WorkShopCreate, db: Session = Depends(get_
     try:
         work_shop_repo = WorkShopRepository(db)
         new_work_shop = work_shop_repo.create_work_shop(work_shop)
-        
+
         work_shop_response = WorkShopResponse.model_validate(new_work_shop)
         return work_shop_response
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 
@@ -60,7 +61,15 @@ async def get_work_shops(db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
-@router.get("/{work_shop_id}", response_model=WorkShopResponse)
+@router.get("/current_work_shop")
+async def read_users_me(current_user = Depends(get_current_work_shop)):
+    try:
+        # Return the current user information
+        return current_user
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@router.get("/{work-shop-id}", response_model=WorkShopResponse)
 async def get_work_shop_by_id(work_shop_id: int, db: Session = Depends(get_db)):
     """
     Получить СТО по ID
@@ -68,14 +77,15 @@ async def get_work_shop_by_id(work_shop_id: int, db: Session = Depends(get_db)):
     try:
         work_shop_repo = WorkShopRepository(db)
         work_shop = work_shop_repo.get_work_shop_by_id(work_shop_id)
-        
+
         if work_shop is None:
             raise HTTPException(status_code=404, detail=f"СТО с ID {work_shop_id} не найдено")
-        
+
         work_shop_response = WorkShopResponse.model_validate(work_shop)
         return work_shop_response
-        
+
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
+
