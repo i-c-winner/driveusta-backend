@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Depends
 from typing import Annotated
 from starlette.responses import HTMLResponse
-from fastapi.security import OAuth2PasswordBearer
 
 from .api import router
 

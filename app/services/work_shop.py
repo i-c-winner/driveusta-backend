@@ -1,5 +1,4 @@
 from fastapi import Depends, HTTPException
-from app.models.work_shops import WorkShop
 from app.services.security.security import oauth2_scheme, verify_token
 
 

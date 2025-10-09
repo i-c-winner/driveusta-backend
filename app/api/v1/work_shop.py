@@ -1,11 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Annotated
 from app.services.work_shop import get_current_work_shop
 
 from app.db.dependencies import get_db
 from app.db.repositories.work_shop import WorkShopRepository
 from app.schemas.work_shop import WorkShopResponse, WorkShopsListResponse, WorkShopCreate
+from app.services.security.security import create_access_token
 
 router = APIRouter(
     prefix="/work_shop",
@@ -26,7 +28,13 @@ async def create_work_shop(work_shop: WorkShopCreate, db: Session = Depends(get_
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
-
+@router.post('/token')
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    # This is a simplified implementation for demonstration
+    # In a real application, you would verify the credentials against the database
+    user = {"username": form_data.username}
+    access_token = create_access_token(data=user)
+    return {"access_token": access_token, "token_type": "bearer"}
 @router.get("/by-address/", response_model=WorkShopsListResponse)
 async def get_work_shops_by_address(street_name: str, address: str, db: Session = Depends(get_db)):
     """
