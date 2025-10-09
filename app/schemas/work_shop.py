@@ -10,6 +10,7 @@ class WorkShopBase(BaseModel):
     site: str = ''
     rating: float = 0.0
     hash_password: str = ''
+    login: str = ''
 
 
 class WorkShopCreate(WorkShopBase):
@@ -24,7 +25,3 @@ class WorkShopResponse(WorkShopBase):
 
 class WorkShopsListResponse(BaseModel):
     work_shops: List[WorkShopResponse]
-
-class WorkShopInDB(WorkShopBase):
-    id: int
-    hash_password: str

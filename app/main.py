@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Depends
-from typing import Annotated
+from fastapi import FastAPI
+
 from starlette.responses import HTMLResponse
 
 from .api import router

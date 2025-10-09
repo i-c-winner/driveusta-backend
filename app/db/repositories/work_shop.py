@@ -19,7 +19,8 @@ class WorkShopRepository:
     def get_work_shop_by_address(self, street_name: str, address: str) -> List[WorkShop]:
         """Получить СТО по названию улицы и адресу"""
         return self.db.query(WorkShop).filter(WorkShop.street_name == street_name, WorkShop.address == address).all()
-    
+    def get_work_shop(self, login):
+        return self.db.query(WorkShop).filter(WorkShop.login == login).first()
     def create_work_shop(self, work_shop: WorkShopCreate) -> WorkShop:
         """Создать новое СТО"""
         db_work_shop = WorkShop(

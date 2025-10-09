@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List, Annotated
-from app.services.work_shop import get_current_work_shop
+
 
 from app.db.dependencies import get_db
 from app.db.repositories.work_shop import WorkShopRepository
 from app.schemas.work_shop import WorkShopResponse, WorkShopsListResponse, WorkShopCreate
-from app.services.security.security import create_access_token
+from app.services.security.token import create_access_token
 
 router = APIRouter(
     prefix="/work_shop",
@@ -30,11 +30,11 @@ async def create_work_shop(work_shop: WorkShopCreate, db: Session = Depends(get_
         raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 @router.post('/token')
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    # This is a simplified implementation for demonstration
-    # In a real application, you would verify the credentials against the database
-    user = {"username": form_data.username}
-    access_token = create_access_token(data=user)
-    return {"access_token": access_token, "token_type": "bearer"}
+    login_from_form=form_data.username
+    password_from_form=form_data.password
+    access_token, refresh_token=create_access_token({}).values()
+    return {"access_token":access_token, "refresh_token": refresh_token}
+
 @router.get("/by-address/", response_model=WorkShopsListResponse)
 async def get_work_shops_by_address(street_name: str, address: str, db: Session = Depends(get_db)):
     """
@@ -48,7 +48,7 @@ async def get_work_shops_by_address(street_name: str, address: str, db: Session 
         work_shop_responses = [WorkShopResponse.model_validate(work_shop) for work_shop in work_shops]
         
         return WorkShopsListResponse(work_shops=work_shop_responses)
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
@@ -69,13 +69,6 @@ async def get_work_shops(db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
-@router.get("/current_work_shop")
-async def read_users_me(current_user = Depends(get_current_work_shop)):
-    try:
-        # Return the current user information
-        return current_user
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @router.get("/{work-shop-id}", response_model=WorkShopResponse)
 async def get_work_shop_by_id(work_shop_id: int, db: Session = Depends(get_db)):
