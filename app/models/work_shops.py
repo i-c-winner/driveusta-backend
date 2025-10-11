@@ -14,7 +14,7 @@ class WorkShop(Base):
     address = Column(String, nullable=False)
     site = Column(String, nullable=False)
     rating = Column(Float, nullable=False)
-    username = Column(String, nullable=False, server_default='')
+    username = Column(String, nullable=False,unique=True, server_default='')
     hash_password = Column(String, nullable=False, server_default='')
     
     holidays = relationship('Holidays', secondary='work_shop.holidays_work_shops', back_populates='work_shop')

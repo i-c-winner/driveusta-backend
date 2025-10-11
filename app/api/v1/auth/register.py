@@ -7,6 +7,7 @@ from app.services.security.auth.token import create_tokens, create_hash_password
 
 from app.db.dependencies import get_db
 from app.models import WorkShop
+from app.models.auth import Tokens
 from app.schemas.auth import ResponseCreateToken
 
 router = APIRouter(
@@ -38,6 +39,12 @@ async def create_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()
           address='',
           site='',
           rating= 0.0)
+      tokens = Tokens(
+          access_token = result["access_token"],
+          refresh_token= result["refresh_token"],
+          work_shop_username= form_data.username
+      )
+      db.add(tokens)
       db.add(new_work_shop)
       db.commit()
       db.refresh(new_work_shop)

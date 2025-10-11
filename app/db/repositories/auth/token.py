@@ -13,9 +13,9 @@ class TokenRepository:
         if db_tokens:
             return ResponseCreateToken(work_shop_id=False)
         db_token = Tokens(
-          hash_token=token.hash_token,
-          token_type=token.token_type,
-          work_shop_id=token.work_shop_id
+          access_token=token.access_token,
+          refresh_token=token.refresh_token,
+          work_shop_username=token.work_shop_username,
             )
         self.db.add(db_token)
         self.db.commit()
