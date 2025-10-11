@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from app.db.base import Base
 
 
-class Token(Base):
+class Tokens(Base):
     __tablename__ = "token"
 
     hash_token= Column(String, primary_key=True, nullable=False)
