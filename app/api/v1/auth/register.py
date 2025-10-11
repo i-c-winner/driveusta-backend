@@ -1,0 +1,32 @@
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
+from typing import Annotated
+from starlette import status
+from app.services.security.auth.token import create_tokens
+
+from app.db.dependencies import get_db
+from app.models import WorkShop
+from app.schemas.auth import ResponseCreateToken
+
+router = APIRouter(
+    prefix="/register",
+    tags=["register"]
+)
+
+
+@router.post(path="/", response_model=ResponseCreateToken)
+async def create_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
+    work_shop = db.query(WorkShop).filter(
+        WorkShop.username == form_data.username,
+    ).first()
+    print(work_shop)
+    if work_shop:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Такой пользователь существует"
+        )
+    else:
+      result=   create_tokens({"work_shop_username": form_data.username})
+      print(result)
+      return result

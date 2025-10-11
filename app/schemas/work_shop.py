@@ -10,7 +10,7 @@ class WorkShopBase(BaseModel):
     site: str = ''
     rating: float = 0.0
     hash_password: str = ''
-    login: str = ''
+    username: str = ''
 
 
 class WorkShopCreate(WorkShopBase):

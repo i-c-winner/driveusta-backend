@@ -14,17 +14,17 @@ if SECRET_KEY_REFRESH is None:
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_tokens(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     expire = datetime.now() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     encoded_jwt_access = jwt.encode(to_encode, SECRET_KEY_ACCESS, algorithm=ALGORITHM)
     encoded_jwt_refresh = jwt.encode(to_encode, SECRET_KEY_REFRESH, algorithm=ALGORITHM)
-    print(encoded_jwt_access, encoded_jwt_refresh, 'ENCODE')
 
     return {
      "access_token":   encoded_jwt_access,
      "refresh_token":  encoded_jwt_refresh,
+     "work_shop_username": data["work_shop_username"]
     }
 
 
