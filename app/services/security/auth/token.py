@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 from jose import jwt
 from dotenv import load_dotenv
+from passlib.hash import bcrypt
 
 load_dotenv()
 SECRET_KEY_ACCESS = os.getenv("SECRET_KEY_ACCESS")
@@ -26,7 +27,9 @@ def create_tokens(data: dict, expires_delta: timedelta | None = None):
      "refresh_token":  encoded_jwt_refresh,
      "work_shop_username": data["work_shop_username"]
     }
-
-
+def create_hash_password(password: str):
+    print(">>> type:", type(password), "value:", password)
+    return bcrypt.hash(password)
+    # return 'sss'
 
 

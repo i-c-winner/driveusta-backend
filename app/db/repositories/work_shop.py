@@ -33,14 +33,14 @@ class WorkShopRepository:
     def create_work_shop(self, work_shop: WorkShopCreate) -> WorkShop:
         """Создать новое СТО"""
         db_work_shop = WorkShop(
-            work_shop_name=work_shop.work_shop_name,
-            telephone=work_shop.telephone,
-            street_name=work_shop.street_name,
-            address=work_shop.address,
-            site=work_shop.site,
-            rating=work_shop.rating,
-            hash_password=work_shop.hash_password,
+            work_shop_name='',
+            telephone='',
+            street_name='',
+            address='',
+            site='',
+            rating='',
             username=work_shop.username,
+            hash_password=work_shop.hash_password
         )
         self.db.add(db_work_shop)
         self.db.commit()

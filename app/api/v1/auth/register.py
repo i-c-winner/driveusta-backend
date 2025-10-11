@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import Annotated
 from starlette import status
-from app.services.security.auth.token import create_tokens
+from app.services.security.auth.token import create_tokens, create_hash_password
 
 from app.db.dependencies import get_db
 from app.models import WorkShop
@@ -28,5 +28,18 @@ async def create_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()
         )
     else:
       result=   create_tokens({"work_shop_username": form_data.username})
+      print('PSWWORD', form_data.password)
+      new_work_shop = WorkShop(
+          username=form_data.username,
+          hash_password=create_hash_password(form_data.password),
+          work_shop_name= '',
+          telephone='',
+          street_name='',
+          address='',
+          site='',
+          rating= 0.0)
+      db.add(new_work_shop)
+      db.commit()
+      db.refresh(new_work_shop)
       print(result)
       return result
