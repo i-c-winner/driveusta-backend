@@ -18,7 +18,6 @@ class WorkShopCreate(WorkShopBase):
 
 
 class WorkShopResponse(WorkShopBase):
-    id: int
     
     model_config = ConfigDict(from_attributes=True)
 

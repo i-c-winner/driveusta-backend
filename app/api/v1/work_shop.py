@@ -9,8 +9,8 @@ from app.db.repositories.work_shop import WorkShopRepository
 from app.schemas.work_shop import WorkShopResponse, WorkShopsListResponse, WorkShopCreate
 
 router = APIRouter(
-    prefix="/work_shop",
-    tags=["work_shop"]
+    prefix="/work-shop",
+    tags=["work-shop"]
 )
 
 @router.post("/", response_model=WorkShopResponse)
@@ -64,17 +64,17 @@ async def get_work_shops(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
 
-@router.get("/{work-shop-id}", response_model=WorkShopResponse)
-async def get_work_shop_by_id(work_shop_id: int, db: Session = Depends(get_db)):
+@router.get("/{work_shop_username}", response_model=WorkShopResponse)
+async def get_work_shop_by_username(work_shop_username: str, db: Session = Depends(get_db)):
     """
     Получить СТО по ID
     """
     try:
         work_shop_repo = WorkShopRepository(db)
-        work_shop = work_shop_repo.get_work_shop_by_id(work_shop_id)
+        work_shop = work_shop_repo.get_work_shop_by_username(work_shop_username)
 
         if work_shop is None:
-            raise HTTPException(status_code=404, detail=f"СТО с ID {work_shop_id} не найдено")
+            raise HTTPException(status_code=404, detail=f"СТО с ID {work_shop_username} не найдено")
 
         work_shop_response = WorkShopResponse.model_validate(work_shop)
         return work_shop_response

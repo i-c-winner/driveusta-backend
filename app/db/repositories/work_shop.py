@@ -13,11 +13,11 @@ class WorkShopRepository:
         """Получить все СТО из базы данных"""
         return self.db.query(WorkShop).all()
     
-    def get_work_shop_by_id(self, work_shop_id: int) -> WorkShop:
-
-
+    def get_work_shop_by_username(self, work_shop_username: str) -> WorkShop:
         """Получить СТО по ID"""
-        return self.db.query(WorkShop).filter(WorkShop.id == work_shop_id).first()
+        return self.db.query(WorkShop).filter(WorkShop.username == work_shop_username).first()
+    def get_current_work_shop(self, username):
+        return self.db.query(WorkShop).filter(WorkShop.username == username).first()
     def verification_password(self,username,  password):
         password_hash = PasswordHash
         username = self.db.query(WorkShop).filter(WorkShop.username == username).first()
