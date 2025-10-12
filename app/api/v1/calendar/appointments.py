@@ -27,13 +27,13 @@ async def create_appointment(appointment: AppointmentCreate, db: Session = Depen
         raise HTTPException(status_code=500, detail=f"Ошибка при создании записи: {str(e)}")
 
 @router.get("/", response_model=AppointmentsListResponse)
-async def get_appointments(work_shop_id: int, db: Session = Depends(get_db)):
+async def get_appointments(work_shop_username: int, db: Session = Depends(get_db)):
     """
     Получить список всех записей на прием из базы данных для определенного СТО
     """
     try:
         appointment_repo = AppointmentRepository(db)
-        appointments = appointment_repo.get_all_appointments(work_shop_id)
+        appointments = appointment_repo.get_all_appointments(work_shop_username)
         
         # Преобразуем модели SQLAlchemy в схемы Pydantic
         appointment_responses = [AppointmentResponse.model_validate(appointment) for appointment in appointments]
@@ -43,17 +43,17 @@ async def get_appointments(work_shop_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
-@router.get("/{appointment_id}", response_model=AppointmentResponse)
-async def get_appointment_by_id(appointment_id: int, work_shop_id: int, db: Session = Depends(get_db)):
+@router.get("/{username}", response_model=AppointmentResponse)
+async def get_appointment_by_username(username: str, db: Session = Depends(get_db)):
     """
     Получить запись на прием по ID для определенного СТО
     """
     try:
         appointment_repo = AppointmentRepository(db)
-        appointment = appointment_repo.get_appointment_by_id(appointment_id, work_shop_id)
+        appointment = appointment_repo.get_appointment_by_username(username)
         
         if appointment is None:
-            raise HTTPException(status_code=404, detail=f"Запись на прием с ID {appointment_id} для СТО {work_shop_id} не найдена")
+            raise HTTPException(status_code=404, detail=f"Запись на прием  для СТО {username} не найдена")
         
         appointment_response = AppointmentResponse.model_validate(appointment)
         return appointment_response
