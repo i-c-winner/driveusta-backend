@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
 
 from app.db.dependencies import get_db
 from app.db.repositories.calendar.appointments import AppointmentRepository
 from app.schemas.calendar.appointments import AppointmentResponse, AppointmentsListResponse, AppointmentCreate, AppointmentUpdate
+from app.services.security.auth.token import get_current_username
 
 router = APIRouter(
     prefix="/calendar/appointments",
@@ -63,17 +63,17 @@ async def get_appointment_by_username(username: str, db: Session = Depends(get_d
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка при получении данных: {str(e)}")
 
-@router.put("/{appointment_id}", response_model=AppointmentResponse)
-async def update_appointment(appointment_id: int, work_shop_id: int, appointment: AppointmentUpdate, db: Session = Depends(get_db)):
+@router.put("/{username}", response_model=AppointmentResponse)
+async def update_appointment(appointment: AppointmentUpdate,  username: str, db: Session = Depends(get_db), current_username: str = Depends(get_current_username) ):
     """
     Обновить запись на прием по ID для определенного СТО
     """
     try:
         appointment_repo = AppointmentRepository(db)
-        updated_appointment = appointment_repo.update_appointment(appointment_id, work_shop_id, appointment)
+        updated_appointment = appointment_repo.update_appointment(appointment,  current_username["username"])
         
         if updated_appointment is None:
-            raise HTTPException(status_code=404, detail=f"Запись на прием с ID {appointment_id} для СТО {work_shop_id} не найдена")
+            raise HTTPException(status_code=404, detail=f"Запись на прием  для СТО {username} не найдена")
         
         appointment_response = AppointmentResponse.model_validate(updated_appointment)
         return appointment_response

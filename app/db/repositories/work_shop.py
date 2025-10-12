@@ -8,14 +8,9 @@ from pwdlib import PasswordHash
 class WorkShopRepository:
     def __init__(self, db: Session):
         self.db = db
-    
     def get_all_work_shops(self) -> List[WorkShop]:
         """Получить все СТО из базы данных"""
         return self.db.query(WorkShop).all()
-    
-    def get_work_shop_by_username(self, work_shop_username: str) -> WorkShop:
-        """Получить СТО по ID"""
-        return self.db.query(WorkShop).filter(WorkShop.username == work_shop_username).first()
     def get_current_work_shop(self, username):
         return self.db.query(WorkShop).filter(WorkShop.username == username).first()
     def verification_password(self,username,  password):
@@ -24,12 +19,6 @@ class WorkShopRepository:
         if not username:
             return False
         return password_hash.verify(password, username.hash_password)
-
-    def get_work_shop_by_address(self, street_name: str, address: str) -> List[WorkShop]:
-        """Получить СТО по названию улицы и адресу"""
-        return self.db.query(WorkShop).filter(WorkShop.street_name == street_name, WorkShop.address == address).all()
-    def get_work_shop(self, login):
-        return self.db.query(WorkShop).filter(WorkShop.login == login).first()
     def create_work_shop(self, work_shop: WorkShopCreate) -> WorkShop:
         """Создать новое СТО"""
         db_work_shop = WorkShop(

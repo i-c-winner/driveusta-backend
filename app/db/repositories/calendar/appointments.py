@@ -8,10 +8,6 @@ class AppointmentRepository:
     def __init__(self, db: Session):
         self.db = db
     
-    def get_all_appointments(self, work_shop_username: str) -> List[Appointments]:
-        """Получить все записи на прием из базы данных для определенного СТО"""
-        return self.db.query(Appointments).filter(Appointments.work_shop_username == work_shop_username).all()
-    
     def get_appointment_by_username(self, username: str) -> Appointments:
         """Получить запись на прием по ID для определенного СТО"""
         return self.db.query(Appointments).filter(
@@ -35,9 +31,9 @@ class AppointmentRepository:
         self.db.refresh(db_appointment)
         return db_appointment
     
-    def update_appointment(self, appointment_id: int, work_shop_username: str, appointment: AppointmentUpdate) -> Appointments:
+    def update_appointment(self, appointment: AppointmentUpdate, username: str) -> Appointments:
         """Обновить запись на прием для определенного СТО"""
-        db_appointment = self.get_appointment_by_id(appointment_id, work_shop_username)
+        db_appointment = self.get_appointment_by_username(username)
         if db_appointment:
             update_data = appointment.model_dump(exclude_unset=True)
             for key, value in update_data.items():
