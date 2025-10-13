@@ -35,19 +35,29 @@ class AppointmentRepository:
         self.db.commit()
         self.db.refresh(db_appointment)
         return db_appointment
-    
-    def update_appointment(self, id: int,  appointment: AppointmentUpdate, username: str) -> Appointments:
+
+    def update_appointment(self, appointment: AppointmentUpdate, id: int, username: str) -> Appointments:
         """Обновить запись на прием для определенного СТО"""
-        username = get_current_username(username)
+
+        # Получаем все записи для этого СТО
         db_appointments = self.get_appointment_by_username(username)
-        db_appointment_id = list(filter(lambda x: x.id==id), db_appointments)
-        if db_appointment_id:
-            update_data = appointment.model_dump(exclude_unset=True)
-            for key, value in update_data.items():
-                setattr(db_appointment_id, key, value)
-            self.db.commit()
-            self.db.refresh(db_appointment_id)
-        return db_appointment_id
+
+        # Ищем нужную запись по id
+        db_appointment = next((x for x in db_appointments if x.id == id), None)
+
+        # Если запись не найдена — возвращаем None
+        if not db_appointment:
+            return None
+
+        # Обновляем только те поля, которые переданы
+        update_data = appointment.model_dump(exclude_unset=True)
+        for key, value in update_data.items():
+            setattr(db_appointment, key, value)
+
+        # Сохраняем изменения
+        self.db.commit()
+        self.db.refresh(db_appointment)
+        return db_appointment
     
     # def delete_appointment(self, appointment_id: int, work_shop_username: str) -> bool:
     #     """Удалить запись на прием для определенного СТО"""
