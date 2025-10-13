@@ -12,7 +12,7 @@ if DATABASE_URL is None:
     raise ValueError("DATABASE_URL not set. Please set DATABASE_URL environment variable for PostgreSQL connection.")
 
 # Создаём движок SQLAlchemy
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True, isolation_level="SERIALIZABLE")
 
 # Создаём фабрику сессий
 SessionLocal = sessionmaker(

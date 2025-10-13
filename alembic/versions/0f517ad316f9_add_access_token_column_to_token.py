@@ -1,8 +1,8 @@
-"""First
+"""add access_token column to token
 
-Revision ID: 710c9ed628ac
+Revision ID: 0f517ad316f9
 Revises: e52e9111db30
-Create Date: 2025-10-03 23:36:34.814787
+Create Date: 2025-10-11 20:50:44.936088
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '710c9ed628ac'
+revision: str = '0f517ad316f9'
 down_revision: Union[str, Sequence[str], None] = 'e52e9111db30'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -40,13 +40,16 @@ def upgrade() -> None:
     op.create_index(op.f('ix_cars_type_work_parents_id'), 'type_work_parents', ['id'], unique=False, schema='cars')
     op.create_table('work_shop',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('work_shop_name', sa.String(), nullable=True),
-    sa.Column('telephone', sa.String(), nullable=True),
-    sa.Column('street_name', sa.String(), nullable=True),
-    sa.Column('address', sa.String(), nullable=True),
-    sa.Column('site', sa.String(), nullable=True),
-    sa.Column('rating', sa.Float(), nullable=True),
+    sa.Column('work_shop_name', sa.String(), nullable=False),
+    sa.Column('telephone', sa.String(), nullable=False),
+    sa.Column('street_name', sa.String(), nullable=False),
+    sa.Column('address', sa.String(), nullable=False),
+    sa.Column('site', sa.String(), nullable=False),
+    sa.Column('rating', sa.Float(), nullable=False),
+    sa.Column('username', sa.String(), server_default='', nullable=False),
+    sa.Column('hash_password', sa.String(), server_default='', nullable=False),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('username'),
     schema='work_shop'
     )
     op.create_index(op.f('ix_work_shop_work_shop_id'), 'work_shop', ['id'], unique=False, schema='work_shop')
@@ -85,10 +88,11 @@ def upgrade() -> None:
     op.create_index(op.f('ix_participants_appointments_id'), 'appointments', ['id'], unique=False, schema='participants')
     op.create_table('participants',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(), nullable=True),
-    sa.Column('password', sa.String(), nullable=True),
+    sa.Column('password', sa.String(), nullable=False),
+    sa.Column('email', sa.String(), nullable=False),
     sa.Column('login', sa.String(), nullable=True),
     sa.Column('vin', sa.Numeric(), nullable=True),
+    sa.Column('car_is', sa.String(), nullable=True),
     sa.Column('car_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['car_id'], ['cars.cars.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -103,6 +107,13 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_streets_id'), 'streets', ['id'], unique=False)
+    op.create_table('token',
+    sa.Column('access_token', sa.String(), nullable=False),
+    sa.Column('refresh_token', sa.String(), nullable=False),
+    sa.Column('work_shop_username', sa.String(), nullable=False),
+    sa.ForeignKeyConstraint(['work_shop_username'], ['work_shop.work_shop.username'], ),
+    sa.PrimaryKeyConstraint('access_token')
+    )
     op.create_table('avialable_cars',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('car_name', sa.String(), nullable=True),
@@ -198,6 +209,7 @@ def downgrade() -> None:
     op.drop_table('holidays', schema='work_shop')
     op.drop_index(op.f('ix_work_shop_avialable_cars_id'), table_name='avialable_cars', schema='work_shop')
     op.drop_table('avialable_cars', schema='work_shop')
+    op.drop_table('token')
     op.drop_index(op.f('ix_streets_id'), table_name='streets')
     op.drop_table('streets')
     op.drop_index(op.f('ix_participants_participants_id'), table_name='participants', schema='participants')
