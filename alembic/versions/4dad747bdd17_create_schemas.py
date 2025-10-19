@@ -11,9 +11,11 @@ def upgrade():
     op.execute("CREATE SCHEMA IF NOT EXISTS cars;")
     op.execute("CREATE SCHEMA IF NOT EXISTS participants;")
     op.execute("CREATE SCHEMA IF NOT EXISTS work_shop;")
+    op.execute("CREATE SCHEMA IF NOT EXISTS prices;")
 
 
 def downgrade():
     op.execute("DROP SCHEMA IF EXISTS work_shop CASCADE;")
     op.execute("DROP SCHEMA IF EXISTS participants CASCADE;")
     op.execute("DROP SCHEMA IF EXISTS cars CASCADE;")
+    op.execute("DROP SCHEMA IF EXISTS prices  CASCADE;")

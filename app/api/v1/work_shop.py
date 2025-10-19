@@ -10,7 +10,7 @@ router = APIRouter(
     tags=["work-shop"]
 )
 
-@router.post("/", response_model=WorkShopResponse)
+@router.put("/", response_model=WorkShopResponse)
 async def create_work_shop(work_shop: WorkShopCreate, db: Session = Depends(get_db)):
     """
     Создать новое СТО

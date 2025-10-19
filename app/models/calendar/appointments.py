@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Time, Date
 from sqlalchemy.orm import relationship
 
-from app.db.base import Base
+from app.db.base import Base, appointments_work_type_children
 
 class Appointments(Base):
     __tablename__ = "appointments"
@@ -18,6 +18,11 @@ class Appointments(Base):
     time = Column(DateTime, nullable=True)
     description=Column(String(200), nullable=False)
 
-    work_type=relationship('TypeWorkChildren',secondary="participants.appointments_work_type_children",  back_populates='appointments')
+    work_type = relationship(
+        "TypeWorkChildren", 
+        secondary=appointments_work_type_children,
+        back_populates="appointments",
+        foreign_keys=[appointments_work_type_children.c.appointments_id, appointments_work_type_children.c.work_type_children_id]
+    )
     work_shop=relationship('WorkShop', secondary="participants.appointments_work_shop", backref="appointments")
     cars=relationship('Cars', secondary="participants.appointments_cars", backref="appointments")
