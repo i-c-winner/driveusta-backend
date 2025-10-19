@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.dependencies import get_db
 from app.db.repositories.price import PriceRepository
 from app.schemas.price import PriceCreate, PriceResponse
+from app.services.security.auth.token import get_current_username
 
 router = APIRouter(
     prefix="/price",
@@ -13,23 +14,26 @@ router = APIRouter(
 @router.post("/", response_model=PriceResponse)
 async def create_price_record(
     price_data: PriceCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_username)
 ):
     """
     Создает или обновляет запись цены в таблице пользователя в схеме prices
     
     Parameters:
-    - username: имя пользователя (используется как имя таблицы)
     - work_type_children_id: ID типа работы
     - price: цена
     
     Returns:
     - PriceResponse: созданная/обновленная запись цены
     """
+    # Используем имя текущего пользователя для таблицы цен
+    username = current_user["username"]
+        
     price_repo = PriceRepository(db)
     try:
         result = price_repo.create_price_record(
-            username=price_data.username,
+            username=username,
             work_type_children_id=price_data.work_type_children_id,
             price=price_data.price
         )
@@ -38,17 +42,16 @@ async def create_price_record(
         raise e
 
 
-@router.get("/{username}/{work_type_children_id}", response_model=PriceResponse)
+@router.get("/{work_type_children_id}", response_model=PriceResponse)
 async def get_price_record(
-    username: str,
     work_type_children_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_username)
 ):
     """
-    Получает запись цены по типу работы для пользователя
+    Получает запись цены по типу работы для текущего пользователя
     
     Parameters:
-    - username: имя пользователя (используется как имя таблицы)
     - work_type_children_id: ID типа работы
     
     Returns:
@@ -57,7 +60,7 @@ async def get_price_record(
     price_repo = PriceRepository(db)
     try:
         result = price_repo.get_price_by_work_type(
-            username=username,
+            username=current_user["username"],
             work_type_children_id=work_type_children_id
         )
         

@@ -3,7 +3,6 @@ from typing import Optional
 
 
 class PriceCreate(BaseModel):
-    username: str
     work_type_children_id: int
     price: float
 

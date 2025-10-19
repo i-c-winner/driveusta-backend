@@ -37,10 +37,10 @@ def create_hash_password(password: str):
     return bcrypt.hash(password)
     # return 'sss'
 
-def get_current_username(token:str=Depends(ouath2_scheme)):
+def get_current_username(token = Depends(ouath2_scheme)):
     try:
-        payload = jwt.decode(token, SECRET_KEY_ACCESS, algorithms=[ALGORITHM])
-        username: str = payload.get("work_shop_username")
+        payload = jwt.decode(token, SECRET_KEY_ACCESS or "", algorithms=[ALGORITHM])
+        username = payload.get("work_shop_username")
         print(username)
         if username is None:
             raise HTTPException(status_code=401, detail="Invalid token")
